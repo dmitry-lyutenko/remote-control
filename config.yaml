@@ -1,0 +1,10 @@
+authToken: 1234569870
+ipAddress: 127.0.0.1
+port: 8080
+commands:
+    - name: ping_8_8_8_8
+      uri: /cmd/os/ping
+      cmd: ping -c 5 8.8.8.8
+    - name: pong
+      uri: /cmd/os/pong
+      cmd: pong
