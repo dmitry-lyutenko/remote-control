@@ -1,0 +1,52 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    env:
+      APP_NAME: remote-control
+    steps:
+      - name: Installing Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.21
+
+      - name: Checkout source repo
+        uses: actions/checkout@v2
+
+      - name: Verify dependencies
+        run: go mod verify
+
+      - name: Build linux amd64 version
+        run: |
+          export GOARCH=amd64
+          export GODS=linux
+          go mod download
+          go build -o ./${APP_NAME} -v ./...
+          tar -cvzf ./${APP_NAME}-linux-amd64.tgz ${APP_NAME}
+      - name: Build linux arm version
+        run: |
+          export GOARCH=arm
+          export GODS=linux
+          go mod download
+          go build -o ./${APP_NAME} -v ./...
+          tar -cvzf ${APP_NAME}-linux-arm.tgz ${APP_NAME}
+      - name: Build linux arm64 version
+        run: |
+          export GOARCH=arm64
+          export GODS=linux
+          go mod download
+          go build -o ./${APP_NAME} -v ./...
+          tar -cvzf ${APP_NAME}-linux-arm64.tgz ${APP_NAME}
+
+      - name: Uploading releases
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "remote-control-linux*.tgz"
+          tag: v0.0.1
