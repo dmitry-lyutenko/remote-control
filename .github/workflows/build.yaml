@@ -26,8 +26,9 @@ jobs:
       - name: Build linux version
         run: |
           export GOARCH=amd64
-          export GODS=linux 
-          go build -o ./${APP_NAME}-linux
+          export GODS=linux
+          go mod download
+          go build -o ./${APP_NAME}-linux -v ./...
       - name: Upload Go test results
         uses: actions/upload-artifact@v4
         with:
