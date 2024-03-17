@@ -1,4 +1,4 @@
-name: Audit
+name: Release
 
 on: [push]
 #  push:
@@ -7,7 +7,7 @@ on: [push]
 #    branches: [main]
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-22.04
     env:
       APP_NAME: remote-control
@@ -30,28 +30,33 @@ jobs:
           go mod download
           go build -o ./${APP_NAME} -v ./...
           tar -cvzf remote-control-linux.tgz remote-control
-#      - name: Upload Go test results
-#        uses: actions/upload-artifact@v4
+      - name: Upload Go test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: remote-control-linux.tgz
+          path: remote-control-linux.tgz
+#      - name: Create Release
+#        id: create_release
+#        uses: actions/create-release@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #        with:
-#          name: remote-control
-#          path: remote-control
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          tag_name:  v0.0.1 #${{ github.ref }}
+#          release_name: Release v0.0.1 #${{ github.ref }}
+#          draft: false
+#          prerelease: false
+#      - name: Upload Release Asset
+#        id: upload-release-asset
+#        uses: actions/upload-release-asset@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+#          asset_path: ./remote-control-linux.tgz
+#          asset_name: remote-control-linux.tgz
+#          asset_content_type: application/tar+gzip
+      - uses: ncipollo/release-action@v1
         with:
-          tag_name:  v0.0.1 #${{ github.ref }}
-          release_name: Release v0.0.1 #${{ github.ref }}
-          draft: false
-          prerelease: false
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./remote-control-linux.tgz
-          asset_name: remote-control-linux.tgz
-          asset_content_type: application/tar+gzip
+          artifacts: "remote-control-linux.tgz"
+    permissions:
+      contents: write
