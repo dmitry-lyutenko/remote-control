@@ -32,5 +32,5 @@ jobs:
       - name: Upload Go test results
         uses: actions/upload-artifact@v4
         with:
-          name: ${APP_NAME}-linux
-          path: ${APP_NAME}-linux
+          name: remote-control-linux
+          path: remote-control-linux
