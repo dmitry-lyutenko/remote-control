@@ -9,6 +9,8 @@ on: [push]
 jobs:
   test:
     runs-on: ubuntu-22.04
+    env:
+      APP_NAME: remote-control
     steps:
       - name: Installing GO
         uses: actions/setup-go@v2
@@ -25,9 +27,9 @@ jobs:
         run: |
           export GOARCH=amd64
           export GODS=linux 
-          go build -o ${{ github.repository }}-linux
+          go build -o ${APP_NAME}-linux
       - name: Upload Go test results
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.repository }}-linux
-          path: ${{ github.repository }}-linux
+          name: ${APP_NAME}-linux
+          path: ${APP_NAME}-linux
