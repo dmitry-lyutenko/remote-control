@@ -26,21 +26,21 @@ jobs:
       - name: Build linux amd64 version
         run: |
           export GOARCH=amd64
-          export GODS=linux
+          export GOOS=linux
           go mod download
           go build -o ./${APP_NAME} -v ./...
           tar -cvzf ./${APP_NAME}-linux-amd64.tgz ${APP_NAME}
       - name: Build linux arm version
         run: |
           export GOARCH=arm
-          export GODS=linux
+          export GOOS=linux
           go mod download
           go build -o ./${APP_NAME} -v ./...
           tar -cvzf ${APP_NAME}-linux-arm.tgz ${APP_NAME}
       - name: Build linux arm64 version
         run: |
           export GOARCH=arm64
-          export GODS=linux
+          export GOOS=linux
           go mod download
           go build -o ./${APP_NAME} -v ./...
           tar -cvzf ${APP_NAME}-linux-arm64.tgz ${APP_NAME}
